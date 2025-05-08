@@ -20,3 +20,8 @@ WHERE email=$1;
 UPDATE users
 SET email = $2, hashed_password = $3
 WHERE id = $1;
+
+-- name: UpgradePrem :exec
+UPDATE users
+SET is_chirpy_prem = true
+where id = $1;

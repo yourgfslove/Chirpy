@@ -33,5 +33,6 @@ type User struct {
 	CreatedAt      sql.NullTime `json:"created_at"`
 	UpdatedAt      sql.NullTime `json:"updated_at"`
 	Email          string       `json:"email"`
-	HashedPassword string       `json:"hashed_password"`
+	HashedPassword string       `json:"-"`
+	IsChirpyPrem   bool         `json:"is_chirpy_prem"`
 }

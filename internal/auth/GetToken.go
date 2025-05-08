@@ -8,9 +8,7 @@ import (
 
 var errorMessage = errors.New("Invalid token")
 
-const prefix = "Bearer"
-
-func GetToken(headers http.Header) (string, error) {
+func GetKey(headers http.Header, prefix string) (string, error) {
 	authHeader := headers.Get("Authorization")
 	if authHeader == "" {
 		return "", errorMessage

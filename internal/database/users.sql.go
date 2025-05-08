@@ -49,7 +49,7 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (CreateU
 }
 
 const getUserByEmail = `-- name: GetUserByEmail :one
-SELECT id, created_at, updated_at, email, hashed_password FROM users
+SELECT id, created_at, updated_at, email, hashed_password, is_chirpy_prem FROM users
 WHERE email=$1
 `
 
@@ -62,6 +62,7 @@ func (q *Queries) GetUserByEmail(ctx context.Context, email string) (User, error
 		&i.UpdatedAt,
 		&i.Email,
 		&i.HashedPassword,
+		&i.IsChirpyPrem,
 	)
 	return i, err
 }
@@ -89,5 +90,16 @@ type UpdateEmailAndPassParams struct {
 
 func (q *Queries) UpdateEmailAndPass(ctx context.Context, arg UpdateEmailAndPassParams) error {
 	_, err := q.db.ExecContext(ctx, updateEmailAndPass, arg.ID, arg.Email, arg.HashedPassword)
+	return err
+}
+
+const upgradePrem = `-- name: UpgradePrem :exec
+UPDATE users
+SET is_chirpy_prem = true
+where id = $1
+`
+
+func (q *Queries) UpgradePrem(ctx context.Context, id uuid.UUID) error {
+	_, err := q.db.ExecContext(ctx, upgradePrem, id)
 	return err
 }
